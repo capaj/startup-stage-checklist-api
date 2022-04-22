@@ -1,21 +1,32 @@
 type Query {
-  startup(id: Float!): Startup
+  startup(id: ID!): StartupMutation
   startups: [Startup!]!
 }
 
-type Startup {
-  id: Int
+type StartupMutation {
+  id: ID!
   name: String!
   stages: [StageMutation!]!
+  stage(id: String!): StageMutation
+  removeStage(id: ID!): Startup
+  addStage(title: String!): Startup
 }
 
 type StageMutation {
-  id: Int
+  id: ID!
+  title: String!
+  todos: [Todo!]!
+  todo(id: ID!): TodoMutation
+  completed: Boolean!
+  edit(title: String!): Stage
+  removeTodo(id: ID!): Stage
+  addTodo: Stage
+}
+
+type Todo {
+  id: ID!
   title: String!
   completedAt: DateTime
-  edit(title: String!): Stage
-  complete: Stage
-  remove: Float!
 }
 
 """
@@ -23,12 +34,35 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 """
 scalar DateTime
 
-type Stage {
-  id: Int
+type TodoMutation {
+  id: ID!
   title: String!
   completedAt: DateTime
+  edit(title: String!): Todo
+
+  """
+  default to true
+  """
+  complete(completed: Boolean): Todo
+}
+
+type Stage {
+  id: ID!
+  title: String!
+  todos: [Todo!]!
+  todo(id: ID!): Todo
+  completed: Boolean!
+}
+
+type Startup {
+  id: ID!
+  name: String!
+  stages: [Stage!]!
+  stage(id: String!): Stage
 }
 
 type Mutation {
-  startup(id: Float!): Startup
+  startup(id: ID!): StartupMutation
+  addStartup(name: String!): StartupMutation
+  removeStartup(id: String!): String!
 }

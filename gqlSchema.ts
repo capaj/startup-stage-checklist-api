@@ -8,8 +8,12 @@ import {
   DuplexObjectType,
   DuplexField,
   QueryAndMutation,
+  Arg,
+  Context,
 } from 'decapi'
-import { GraphQLInt } from 'graphql'
+import { GraphQLID } from 'graphql'
+import { IContext } from '.'
+import { genId } from './genId'
 
 export class ConstructorAssigner<T = any> {
   constructor(parameters: Partial<T>) {
@@ -18,9 +22,9 @@ export class ConstructorAssigner<T = any> {
 }
 
 @DuplexObjectType()
-class Stage extends ConstructorAssigner {
-  @Field({ type: GraphQLInt })
-  id: number
+export class Todo extends ConstructorAssigner {
+  @Field({ type: GraphQLID })
+  id: string
   @DuplexField()
   title: string
 
@@ -29,56 +33,138 @@ class Stage extends ConstructorAssigner {
 }
 
 @ObjectType()
-class StageMutation extends Stage {
+export class Stage extends ConstructorAssigner {
+  @Field({ type: GraphQLID })
+  id: string
+
+  @DuplexField()
+  title: string
+
+  @Field()
+  todos: Todo[]
+
+  @Field()
+  todo(@Arg({ type: GraphQLID }) id: string): Todo | undefined {
+    return this.todos.find(({ id: todoId }) => todoId === id)
+  }
+
+  @Field()
+  completed() {
+    return this.todos.every(({ completedAt }) => completedAt)
+  }
+}
+
+@ObjectType()
+export class StageMutation extends Stage {
+  title: string
+
   @Field()
   edit(title: string): Stage {
     this.title = title
     return this
   }
+
+  todos: TodoMutation[]
+
   @Field()
-  complete(): Stage {
-    this.completedAt = new Date()
+  todo(@Arg({ type: GraphQLID }) id: string): TodoMutation | undefined {
+    return this.todos.find(({ id: todoId }) => todoId === id)
+  }
+
+  @Field()
+  removeTodo(@Arg({ type: GraphQLID }) id: string): Stage {
+    this.todos = this.todos.filter((s) => s.id !== id)
     return this
   }
+
   @Field()
-  remove(): number {
-    startupDB = startupDB.filter((s) => s.id !== this.id)
-    return startupDB.length
+  addTodo(): Stage {
+    this.todos.push(
+      new TodoMutation({ id: genId(), title: '', completedAt: null })
+    )
+    return this
+  }
+}
+
+@ObjectType()
+export class TodoMutation extends Todo {
+  @Field()
+  edit(title: string): Todo {
+    this.title = title
+    return this
+  }
+  @Field({ description: 'default to true' })
+  complete(completed: boolean | null): Todo {
+    this.completedAt = completed === false ? new Date() : null
+    return this
   }
 }
 
 @DuplexObjectType()
-class Startup extends ConstructorAssigner {
-  @Field({ type: GraphQLInt })
-  id: number
+export class Startup extends ConstructorAssigner {
+  @Field({ type: GraphQLID })
+  id: string
   @DuplexField()
   name: string
 
   @Field()
-  stages: StageMutation[]
+  stages: Stage[]
+
+  @Field()
+  stage(id: string): Stage | undefined {
+    return this.stages.find((s) => s.id === id)
+  }
 }
 
-let startupDB: Startup[] = [
-  {
-    id: 1,
-    name: 'Crave tech',
-    stages: [
-      new StageMutation({ id: 1, name: 'Lord of the Rings' }),
-      new StageMutation({ id: 2, name: 'Harry Potter' }),
-    ],
-  },
-]
+@ObjectType()
+export class StartupMutation extends Startup {
+  @Field()
+  removeStage(@Arg({ type: GraphQLID }) id: string): Startup {
+    this.stages = this.stages.filter((s) => s.id !== id)
+    return this
+  }
+
+  @Field()
+  stages: StageMutation[]
+
+  @Field()
+  addStage(title: string): Startup {
+    this.stages.push(new StageMutation({ id: genId(), title, todos: [] }))
+    return this
+  }
+
+  @Field()
+  stage(id: string): StageMutation | undefined {
+    return this.stages.find((s) => s.id === id)
+  }
+}
 
 @SchemaRoot()
-class StartupStageChecklistSchema {
+export class StartupStageChecklistSchema {
   @QueryAndMutation()
-  startup(id: number): Startup | undefined {
-    return startupDB.find(({ id: sId }) => sId === id)
+  startup(
+    @Arg({ type: GraphQLID }) id: string,
+    @Context ctx: IContext
+  ): StartupMutation | undefined {
+    return ctx.db.find(({ id: sId }) => sId === id)
   }
 
   @Query({ type: [Startup] })
-  startups(): Startup[] {
-    return startupDB
+  startups(@Context ctx: IContext): Startup[] {
+    return ctx.db
+  }
+
+  @Mutation()
+  addStartup(name: string, @Context ctx: IContext): StartupMutation {
+    const startup = new StartupMutation({ id: genId(), name, stages: [] })
+    ctx.db.push(startup)
+    return startup
+  }
+
+  @Mutation()
+  removeStartup(id: string, @Context ctx: IContext): string {
+    ctx.db = ctx.db.filter((s) => s.id !== id)
+    return id
   }
 }
 
