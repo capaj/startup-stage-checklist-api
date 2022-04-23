@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./startup.db"
+}
+
+model Startup {
+  id String @id @default(cuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  Stages    Stage[]
+}
+
+model Stage {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  title       String
+  completedAt DateTime?
+  startupId   String
+  startup     Startup   @relation(fields: [startupId], references: [id])
+
+  Todo Todo[]
+}
+
+model Todo {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  completedAt DateTime?
+  title       String
+
+  stageId String
+  stage   Stage  @relation(fields: [stageId], references: [id])
+}

@@ -1,38 +1,37 @@
-import { TodoMutation, Todo, StartupMutation } from './gqlSchema'
+import { Todo, StartupMutation, Stage } from './gqlSchema'
 import { genId } from './genId'
+
 export const startupDB: StartupMutation[] = [
   new StartupMutation({
     id: genId(),
     name: 'Crave tech',
     stages: [
-      new TodoMutation({
+      new Stage({
         id: genId(),
         title: 'Foundation',
         todos: [
           new Todo({ id: genId(), title: 'Setup virtual office' }),
           new Todo({ id: genId(), title: 'Set mission and vision' }),
           new Todo({ id: genId(), title: 'select business name' }),
-          new Todo({ id: genId(), title: 'buy domains' }),
-        ],
+          new Todo({ id: genId(), title: 'buy domains' })
+        ]
       }),
-      new TodoMutation({
+      new Stage({
         id: genId(),
         title: 'Discovery',
         todos: [
           new Todo({ id: genId(), title: 'Roadmap' }),
-          new Todo({ id: genId(), title: 'Competitor analysis' }),
-        ],
+          new Todo({ id: genId(), title: 'Competitor analysis' })
+        ]
       }),
-      new TodoMutation({
+      new Stage({
         id: genId(),
         title: 'Delivery',
         todos: [
           new Todo({ id: genId(), title: 'Mvp' }),
-          new Todo({ id: genId(), title: 'Launch' }),
-        ],
-      }),
-    ],
-  }),
+          new Todo({ id: genId(), title: 'Launch' })
+        ]
+      })
+    ]
+  })
 ]
-
-console.log(startupDB[0].id)

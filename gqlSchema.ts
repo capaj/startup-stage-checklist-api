@@ -9,10 +9,10 @@ import {
   DuplexField,
   QueryAndMutation,
   Arg,
-  Context,
+  Context
 } from 'decapi'
 import { GraphQLID } from 'graphql'
-import { IContext } from '.'
+import { IContext } from './IContext'
 import { genId } from './genId'
 
 export class ConstructorAssigner<T = any> {
