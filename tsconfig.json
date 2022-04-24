@@ -3,9 +3,7 @@
     "module": "commonjs",
     "lib": ["ES2017"],
     "target": "ES2018",
-    "types": [
-      "node"
-    ],
+    "types": ["node", "jest"],
     "strictNullChecks": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,

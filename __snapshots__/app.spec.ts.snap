@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`suite name should query all data about startup, stages and todos 1`] = `
+Object {
+  "data": Object {
+    "startups": Array [
+      Object {
+        "id": "3e9",
+        "name": "Crave tech",
+        "stages": Array [
+          Object {
+            "completed": false,
+            "id": "3ea",
+            "title": "Foundation",
+            "todos": Array [
+              Object {
+                "completedAt": null,
+                "id": "3eb",
+                "title": "Setup virtual office",
+              },
+              Object {
+                "completedAt": null,
+                "id": "3ec",
+                "title": "Set mission and vision",
+              },
+              Object {
+                "completedAt": null,
+                "id": "3ed",
+                "title": "select business name",
+              },
+              Object {
+                "completedAt": null,
+                "id": "3ee",
+                "title": "buy domains",
+              },
+            ],
+          },
+          Object {
+            "completed": false,
+            "id": "3ef",
+            "title": "Discovery",
+            "todos": Array [
+              Object {
+                "completedAt": null,
+                "id": "3f0",
+                "title": "Roadmap",
+              },
+              Object {
+                "completedAt": null,
+                "id": "3f1",
+                "title": "Competitor analysis",
+              },
+            ],
+          },
+          Object {
+            "completed": false,
+            "id": "3f2",
+            "title": "Delivery",
+            "todos": Array [
+              Object {
+                "completedAt": null,
+                "id": "3f3",
+                "title": "Mvp",
+              },
+              Object {
+                "completedAt": null,
+                "id": "3f4",
+                "title": "Launch",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+}
+`;
