@@ -34,5 +34,3 @@ export const startupDB: StartupMutation[] = [
     ],
   }),
 ]
-
-console.log(startupDB[0].id)

@@ -55,6 +55,20 @@ export class Stage extends ConstructorAssigner {
 }
 
 @ObjectType()
+export class TodoMutation extends Todo {
+  @Field()
+  edit(title: string): Todo {
+    this.title = title
+    return this
+  }
+  @Field({ description: 'default to true' })
+  complete(completed: boolean | null): Todo {
+    this.completedAt = completed === false ? null : new Date()
+    return this
+  }
+}
+
+@ObjectType()
 export class StageMutation extends Stage {
   title: string
 
@@ -72,31 +86,22 @@ export class StageMutation extends Stage {
   }
 
   @Field()
-  removeTodo(@Arg({ type: GraphQLID }) id: string): Stage {
-    this.todos = this.todos.filter((s) => s.id !== id)
-    return this
+  removeTodo(@Arg({ type: GraphQLID }) id: string): boolean {
+    const without = this.todos.filter((s) => s.id !== id)
+    const removed = without.length + 1 === this.todos.length
+    this.todos = without
+    return removed
   }
 
   @Field()
-  addTodo(): Stage {
-    this.todos.push(
-      new TodoMutation({ id: genId(), title: '', completedAt: null })
-    )
-    return this
-  }
-}
-
-@ObjectType()
-export class TodoMutation extends Todo {
-  @Field()
-  edit(title: string): Todo {
-    this.title = title
-    return this
-  }
-  @Field({ description: 'default to true' })
-  complete(completed: boolean | null): Todo {
-    this.completedAt = completed === false ? new Date() : null
-    return this
+  addTodo(title: string): TodoMutation {
+    const todo = new TodoMutation({
+      id: genId(),
+      title: title,
+      completedAt: null,
+    })
+    this.todos.push(todo)
+    return todo
   }
 }
 
@@ -119,18 +124,21 @@ export class Startup extends ConstructorAssigner {
 @ObjectType()
 export class StartupMutation extends Startup {
   @Field()
-  removeStage(@Arg({ type: GraphQLID }) id: string): Startup {
-    this.stages = this.stages.filter((s) => s.id !== id)
-    return this
+  removeStage(@Arg({ type: GraphQLID }) id: string): boolean {
+    const without = this.stages.filter((s) => s.id !== id)
+    const removed = without.length + 1 === this.stages.length
+    this.stages = without
+    return removed
   }
 
   @Field()
   stages: StageMutation[]
 
   @Field()
-  addStage(title: string): Startup {
-    this.stages.push(new StageMutation({ id: genId(), title, todos: [] }))
-    return this
+  addStage(title: string): StageMutation {
+    const stage = new StageMutation({ id: genId(), title, todos: [] })
+    this.stages.push(stage)
+    return stage
   }
 
   @Field()
@@ -162,9 +170,11 @@ export class StartupStageChecklistSchema {
   }
 
   @Mutation()
-  removeStartup(id: string, @Context ctx: IContext): string {
-    ctx.db = ctx.db.filter((s) => s.id !== id)
-    return id
+  removeStartup(id: string, @Context ctx: IContext): boolean {
+    const without = ctx.db.filter((s) => s.id !== id)
+    const removed = without.length + 1 === ctx.db.length
+    ctx.db = without
+    return removed
   }
 }
 

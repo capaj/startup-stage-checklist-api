@@ -8,8 +8,8 @@ type StartupMutation {
   name: String!
   stages: [StageMutation!]!
   stage(id: String!): StageMutation
-  removeStage(id: ID!): Startup
-  addStage(title: String!): Startup
+  removeStage(id: ID!): Boolean!
+  addStage(title: String!): StageMutation
 }
 
 type StageMutation {
@@ -19,8 +19,8 @@ type StageMutation {
   todo(id: ID!): TodoMutation
   completed: Boolean!
   edit(title: String!): Stage
-  removeTodo(id: ID!): Stage
-  addTodo: Stage
+  removeTodo(id: ID!): Boolean!
+  addTodo(title: String!): TodoMutation
 }
 
 type Todo {
@@ -64,5 +64,5 @@ type Startup {
 type Mutation {
   startup(id: ID!): StartupMutation
   addStartup(name: String!): StartupMutation
-  removeStartup(id: String!): String!
+  removeStartup(id: String!): Boolean!
 }
