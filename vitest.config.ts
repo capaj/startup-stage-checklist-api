@@ -1,5 +1,5 @@
 import { configDefaults, defineConfig } from 'vitest/config'
-console.log('~ configDefaults', configDefaults)
+
 import typescript from 'rollup-plugin-typescript2'
 import rtti from 'typescript-rtti/dist/transformer'
 
@@ -24,6 +24,10 @@ export default defineConfig({
         find: /^decapi$/,
         replacement: 'node_modules/decapi/dist/esm/'
       }
+      // {
+      //   find: /^graphql/,
+      //   replacement: 'graphql'
+      // }
     ]
   },
   esbuild: false
