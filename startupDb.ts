@@ -1,36 +1,42 @@
-import { TodoMutation, Todo, StartupMutation } from './gqlSchema'
+import { Todo, StartupMutation, StageMutation } from './gqlSchema'
 import { genId } from './genId'
-export const startupDB: StartupMutation[] = [
-  new StartupMutation({
+
+const startup = new StartupMutation({
+  id: genId(),
+  name: 'Crave tech',
+  stages: [],
+})
+
+startup.stages = [
+  new StageMutation({
     id: genId(),
-    name: 'Crave tech',
-    stages: [
-      new TodoMutation({
-        id: genId(),
-        title: 'Foundation',
-        todos: [
-          new Todo({ id: genId(), title: 'Setup virtual office' }),
-          new Todo({ id: genId(), title: 'Set mission and vision' }),
-          new Todo({ id: genId(), title: 'select business name' }),
-          new Todo({ id: genId(), title: 'buy domains' }),
-        ],
-      }),
-      new TodoMutation({
-        id: genId(),
-        title: 'Discovery',
-        todos: [
-          new Todo({ id: genId(), title: 'Roadmap' }),
-          new Todo({ id: genId(), title: 'Competitor analysis' }),
-        ],
-      }),
-      new TodoMutation({
-        id: genId(),
-        title: 'Delivery',
-        todos: [
-          new Todo({ id: genId(), title: 'Mvp' }),
-          new Todo({ id: genId(), title: 'Launch' }),
-        ],
-      }),
+    title: 'Foundation',
+    todos: [
+      new Todo({ startup, id: genId(), title: 'Setup virtual office' }),
+      new Todo({ startup, id: genId(), title: 'Set mission and vision' }),
+      new Todo({ startup, id: genId(), title: 'select business name' }),
+      new Todo({ startup, id: genId(), title: 'buy domains' }),
     ],
+    startup,
+  }),
+  new StageMutation({
+    id: genId(),
+    title: 'Discovery',
+    todos: [
+      new Todo({ startup, id: genId(), title: 'Roadmap' }),
+      new Todo({ startup, id: genId(), title: 'Competitor analysis' }),
+    ],
+    startup,
+  }),
+  new StageMutation({
+    id: genId(),
+    title: 'Delivery',
+    todos: [
+      new Todo({ startup, id: genId(), title: 'Mvp' }),
+      new Todo({ startup, id: genId(), title: 'Launch' }),
+    ],
+    startup,
   }),
 ]
+
+export const startupDB: StartupMutation[] = [startup]

@@ -224,8 +224,58 @@ describe('suite name', () => {
       }
     `)
   })
+  it('should throw when any todo in previous phases is not complete', async () => {
+    const res = await execGql(gql`
+      mutation {
+        startup(id: "3e9") {
+          name
+          id
+
+          stage(id: "3ef") {
+            id
+            todo(id: "3f0") {
+              complete {
+                completedAt
+              }
+            }
+          }
+        }
+      }
+    `)
+
+    expect(res).toMatchInlineSnapshot(`
+      Object {
+        "data": Object {
+          "startup": Object {
+            "id": "3e9",
+            "name": "Crave tech",
+            "stage": Object {
+              "id": "3ef",
+              "todo": Object {
+                "complete": null,
+              },
+            },
+          },
+        },
+        "errors": Array [
+          [GraphQLError: previous stage not completed],
+        ],
+      }
+    `)
+  })
 
   it('should complete a stage when all todos in a stage are complete', async () => {
+    await execGql(gql`
+      mutation {
+        startup(id: "3e9") {
+          name
+          id
+
+          first: removeStage(id: "3ea")
+          second: removeStage(id: "3ef")
+        }
+      }
+    `)
     await execGql(gql`
       mutation {
         startup(id: "3e9") {

@@ -52,6 +52,8 @@ export class Stage extends ConstructorAssigner {
   completed() {
     return this.todos.every(({ completedAt }) => completedAt)
   }
+
+  startup: Startup
 }
 
 @ObjectType()
@@ -61,11 +63,30 @@ export class TodoMutation extends Todo {
     this.title = title
     return this
   }
-  @Field({ description: 'default to true' })
+  @Field({ description: 'defaults to true' })
   complete(completed: boolean | null): Todo {
-    this.completedAt = completed === false ? null : new Date()
-    return this
+    const stageIndex = this.startup.stages.findIndex(({ todos }) =>
+      todos.includes(this)
+    )
+
+    if (stageIndex === -1) {
+      throw new Error('todo not found in any stage')
+    }
+    if (stageIndex === 0) {
+      this.completedAt = completed === false ? null : new Date()
+      return this
+    } else {
+      const previousStage = this.startup.stages[stageIndex - 1]
+
+      if (previousStage.completed() === false) {
+        throw new Error('previous stage not completed')
+      }
+      this.completedAt = completed === false ? null : new Date()
+      return this
+    }
   }
+
+  startup: Startup
 }
 
 @ObjectType()
