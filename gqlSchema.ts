@@ -117,6 +117,7 @@ export class StageMutation extends Stage {
   @Field()
   addTodo(title: string): TodoMutation {
     const todo = new TodoMutation({
+      startup: this.startup,
       id: genId(),
       title: title,
       completedAt: null,
