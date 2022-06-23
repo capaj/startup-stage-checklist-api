@@ -1,4 +1,5 @@
-module.exports = {
+export default {
+  preset: 'ts-jest',
   transform: {
     '^.+\\.ts?$': 'ts-jest',
   },
@@ -6,7 +7,9 @@ module.exports = {
   moduleFileExtensions: ['ts', 'js'],
   globals: {
     'ts-jest': {
+      diagnostics: false,
       compiler: 'ttypescript',
+      useESM: true,
     },
   },
 }

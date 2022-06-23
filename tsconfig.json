@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "ESNext",
     "lib": ["ES2017"],
     "target": "ES2018",
     "types": ["node", "jest"],
@@ -8,6 +8,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "plugins": [{ "transform": "typescript-rtti/dist/transformer" }]
   }

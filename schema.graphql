@@ -41,7 +41,7 @@ type TodoMutation {
   edit(title: String!): Todo
 
   """
-  default to true
+  defaults to true
   """
   complete(completed: Boolean): Todo
 }
