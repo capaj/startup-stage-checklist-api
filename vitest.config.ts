@@ -1,10 +1,11 @@
 import { configDefaults, defineConfig } from 'vitest/config'
 
 import typescript from 'rollup-plugin-typescript2'
-import rtti from 'typescript-rtti/dist/transformer'
+import rtti from 'typescript-rtti/dist/transformer/index.js'
 
 const transformer = (service) => ({
-  before: [rtti(service.getProgram())],
+  // @ts-expect-error
+  before: [rtti.default(service.getProgram())],
   after: []
 })
 
@@ -17,21 +18,7 @@ export default defineConfig({
   ],
   test: configDefaults,
   resolve: {
-    dedupe: ['graphql'],
-
-    alias: [
-      {
-        find: /^decapi$/,
-        replacement: 'node_modules/decapi/dist/esm/'
-      }
-      // {
-      //   find: /^graphql/,
-      //   replacement: 'graphql'
-      // }
-    ]
+    dedupe: ['graphql']
   },
   esbuild: false
-  // optimizeDeps: {
-  //   exclude: ['graphql']
-  // }
 })
