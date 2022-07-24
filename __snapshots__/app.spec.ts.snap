@@ -1,0 +1,67 @@
+// Vitest Snapshot v1
+
+exports[`suite name > should add new stage 1`] = `
+[
+  StartupMutation {
+    "id": "3e9",
+    "name": "Crave tech",
+    "stages": [
+      Stage {
+        "id": "3ea",
+        "title": "Foundation",
+        "todos": [
+          Todo {
+            "id": "3eb",
+            "title": "Setup virtual office",
+          },
+          Todo {
+            "id": "3ec",
+            "title": "Set mission and vision",
+          },
+          Todo {
+            "id": "3ed",
+            "title": "select business name",
+          },
+          Todo {
+            "id": "3ee",
+            "title": "buy domains",
+          },
+        ],
+      },
+      Stage {
+        "id": "3ef",
+        "title": "Discovery",
+        "todos": [
+          Todo {
+            "id": "3f0",
+            "title": "Roadmap",
+          },
+          Todo {
+            "id": "3f1",
+            "title": "Competitor analysis",
+          },
+        ],
+      },
+      Stage {
+        "id": "3f2",
+        "title": "Delivery",
+        "todos": [
+          Todo {
+            "id": "3f3",
+            "title": "Mvp",
+          },
+          Todo {
+            "id": "3f4",
+            "title": "Launch",
+          },
+        ],
+      },
+      StageMutation {
+        "id": "3f5",
+        "title": "New stage",
+        "todos": [],
+      },
+    ],
+  },
+]
+`;

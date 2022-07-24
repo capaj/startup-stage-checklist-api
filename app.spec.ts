@@ -7,9 +7,10 @@ describe('suite name', () => {
     expect(gqlSchema).to.be.toBeTruthy()
   })
 
-  it('should aa', async () => {
+  it('should add new stage', async () => {
     startupDB[0].addStage('New stage')
 
     expect(startupDB[0].stages[3].title).to.be.toBe('New stage')
+    expect(startupDB).toMatchSnapshot()
   })
 })
