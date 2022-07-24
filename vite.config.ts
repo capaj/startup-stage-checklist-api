@@ -22,5 +22,6 @@ export default defineConfig({
       transformers: [transformer]
     })
   ],
+  esbuild: false,
   optimizeDeps: {}
 })
